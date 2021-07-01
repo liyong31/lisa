@@ -147,7 +147,9 @@ The meaning of each item in the JSON file is as follows:
 * *input*, *output* and *assumptions* as usual specify the input, output and unobservable variables, respectively
 * *assumptions* and *guarantees* give the specification formulas as usual 
 
-**NOTE** Commas in [] must be followed by a string. 
+**NOTE** 
+Commas in [] must be followed by a string. 
+
 Command line usage
 =======
 
