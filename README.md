@@ -14,11 +14,15 @@ Lisa requires a C++14-compliant compiler.  G++ 5.x or later should work.
 Third-party dependencies
 -----------------------------------
 
-* [Spot model checker version>=2.9](https://spot.lrde.epita.fr/)
+* [Spot model checker](https://spot.lrde.epita.fr/)
 
 * [MONA](https://github.com/liyong31/MONA)
 
 * [CUDD library](https://github.com/KavrakiLab/cudd.git)
+
+* [Sylvan library](https://github.com/trolando/sylvan)
+
+* [Nlohmann Json](https://github.com/nlohmann/json)
 
 Lisa relies on Spot and MONA to construct a DFA from a small LTLf formula.
 When constructing a DFA from an LTLf formula with MONA, Lisa translates an LTLf formula to a formula in first order logic, which is then fed into MONA.
@@ -42,7 +46,7 @@ In the following we assume that we will compile Lisa on a Ubuntu system.
 
 2. Install CUDD
 
-    Lisa employs CUDD for symbolic DFA minimization.
+    Syft needs CUDD to perform BDD operations and Lisa employs CUDD for symbolic DFA minimization.
 
     * Uncompress cudd.zip or get CUDD from https://github.com/KavrakiLab/cudd.git.
 
@@ -77,7 +81,30 @@ In the following we assume that we will compile Lisa on a Ubuntu system.
     Note that MONA has explicit state representation but encodes the labels on transition symbolically.
     For more details on the representation of DFA in MONA, we refer to https://www.brics.dk/mona/mona14.pdf.
     
+4. Compile Sylvan
+
+    Lisa also can use Sylvan for symbolic DFA minimization.
+
+    * Download Sylvan from https://github.com/trolando/sylvan.git
+
+    * Install Sylvan:
+
+            mk build && cd build && cmake .. && sudo make install
+
+    You may need to restart the system for Sylvan to work
+
+5. Install json
+    Lisa needs json to parse the input specification file.
+
+    * Download json from https://github.com/nlohmann/json
+    
+    * Install json:
+
+            mkdir build && cd build && cmake .. && sudo make install
+
 6. Compile Lisa
+
+    * Copy the executable file ltlf2fol to lisa folder.
 
     * Compile Lisa with Make:
     
@@ -85,53 +112,81 @@ In the following we assume that we will compile Lisa on a Ubuntu system.
 
         or compile Lisa in command line:
 
-            g++ lisa.cc dfwavar.cc dfwa.cc spotutil.cc ltlf2fol.cc mona.cc dfwamin.cc synt.cc strategy.cc dfwamin2.cc -o lisa -lspot -lbddx -lcudd  -O3
+            g++ lisa.cc minimize.cc dfwavar.cc ltlf2fol.cc dfwa.cc spotutil.cc mona.cc dfwamin.cc synt.cc strategy.cc dfwamin2.cc dfwamin3.cc  -o lisa -lspot -lbddx -lcudd -lsylvan -O3
 
 Input format
 =======
 
-Lisa accepts LTLf formulas given as a .ltlf file written in SPOT format. 
+Lisa accepts a specification file in JSON format as input.
+Our json input format is inspired from the input of [BoSy](https://github.com/reactive-systems/syfco).  
 
-For synthesis, it also requires a .part file. The .part file indicates the input and output propostitions for the synthesis task. 
+We take the following arbiter specification for two clients from BoSy.
+Here every request from a client (signal `r_0`/`r_1`) must be eventually granted (signal `g_0`/`g_1`) by the arbiter with the restriction that `g_0` and `g_1` may not be set simultaneously.
 
-Example .ltltf file
-
+```json
+{
+    "description": "",
+	"semantics": "mealy",
+    "type" : "winning",
+	"inputs":  ["r_0", "r_1"],
+	"outputs": ["g_0", "g_1"],
+    "unobservable": [],
+	"assumptions": [],
+	"guarantees": [
+		"G ((!g_0) || (!g_1))",
+		"G (r_0 -> (F g_0))",
+		"G (r_1 -> (F g_1))"
+	]
+}
 ```
-((COUNTER0 <-> INITCOUNTER0)) && (G (CARRY0 <-> INC)) && (G ((X COUNTER0 -> !(COUNTER0 <-> CARRY0)) && (X !COUNTER0 -> (COUNTER0 <-> CARRY0)))) && ((G ((!INC -> X INC)) -> F (!COUNTER0)))
-```
-
-Example .part file
-
-```
-.inputs INITCOUNTER0 INC
-.outputs COUNTER0 CARRY0
-```
+We note that here the *semantics* of the output strategy can also be a *moore* machine and the strategy *type* can be *good-enough* rather than a winning strategy.
 
 Command line usage
 =======
 
-If you type ./lisa -h in command line, you should see the following command line usage:
+If you type ./lisa --help in command line, you should see the following command line usage:
 
 ```
-Usage: lisa [OPTION...] [FILENAME[/COL]...]
-Read a formula file and output the number of states of the constructed DFA
+Usage: lisa [OPTION...] [SPECIFICATION...]
+Translate an LTLf formula to a DFA and perform synthesis if necessary
 
- Input options:
- -h                    show this help page
- -exp                  use only explicit method (default false)
- -min                  minimize the last symbolic DFA (default false)
- -syn                  synthesize after DFA construction (default false)
- -bdd                  use buddy for DFA minimization
- -cdd                  use cudd for DFA minimization
- -nap  <int>           number of atomic propositions for calling mona (default 7)
- -npr  <int>           number of products for calling minimization (default 6)
- -nia  <int>           number of states of individual DFA for calling symbolic approach (default 800)
- -npa  <int>           number of states of product DFA for calling symbolic approach (default 2500)
- -lst  <int>           number of last automata for calling symbolic approach (default -1)
- -out                  print out the wining strategy if realizable
- -part <file>          the file specifying the input and output propositions
- -ltlf <file>          the file specifying the input LTLf formula
- -env                  environment plays first
+ Input:
+  -f, --formula=STRING       Process the specification STRING
+  -F, --file=FILE            Process the specification in FILE
+  -o, --output=FILE          Output to FILE instead of standard output
+  -v, --verbose              Produce verbose output
+
+ DFA construction:
+  -e, --explicit             Only explicit approach for DFA construction
+                             (Default: false)
+  -i, --individual=INT       Switch to symbolic approach when the number of
+                             states of an individual DFA exceeds INT
+                             (Default: 800)
+  -p, --product=INT          Switch to symbolic approach when the number of
+                             states of a product DFA exceeds INT
+                             (Default: 2500)
+
+ Synthesis:
+  -s, --synthesize           Synthesize a strategy from the specification
+
+ DFA minimization:
+  -m, --minimize             Minimize the DFA for the specification
+
+ BDD choice:
+  -b, --buddy                Apply BuDDy for DFA minimization
+  -c, --cudd                 Apply CUDD for DFA minimization
+  -y, --sylvan               Apply Sylvan for DFA minimization
+
+ Miscellaneous options:
+  -?, --help                 Give this help list
+      --usage                Give a short usage message
+  -V, --version              Print program version
+
+Mandatory or optional arguments to long options are also mandatory or optional
+for any corresponding short options.
+
+Report bugs to <liyong@ios.ac.cn>.
+
 ```
 
 For LTLf to DFA construction
@@ -211,18 +266,12 @@ In particular, *X(0)* is true iff there is no successor.
 Strong next: *X[!] a* is true if *a* holds at next step and there must be a next step.
 In particular *X[!]1* is true iff there is a successor.
 
-**Note**
-Other tools like [Syft](https://github.com/saffiepig/Syft) may interpret *X* as a strong next operator and use *N* to denote weak next operator.
-Moreover, the minimal DFAs constructed by lisa may have one less state than those by MONA due to the fact that lisa removes nonaccepting sink state while MONA keeps it.
-
-Please be noted the differences above.
-
 ## Acknowledgment
 - Alexandre Duret-Lutz : [Spot](https://spot.lrde.epita.fr/)
 - Jørn Lind-Nielsen: [BuDDy](http://vlsicad.eecs.umich.edu/BK/Slots/cache/www.itu.dk/research/buddy/)
+- Aarhus University: [MONA](https://www.brics.dk/mona/)
 - Fabio Somenzi: [CUDD](https://github.com/ivmai/cudd)
+- Tom van Dijk: [Sylvan](https://github.com/trolando/sylvan)
 - Shufang Zhu: [Syft](https://github.com/saffiepig/Syft)
-- Aarhus University: [MONA](http://www.brics.dk/mona)
-- Niels Lohmann [json](https://github.com/nlohmann/json)
-    
-
+- Niels Lohmann & other contributors: [json](https://github.com/nlohmann/json)
+- Vu Phan: [DPMC](https://github.com/vardigroup/DPMC)

@@ -53,14 +53,14 @@ parse_spec(const char *file_name)
         cout << "unobservable: " << ubobs_ap << endl;
     }
 
-    if (j[TYPE] == DOMINANT)
+    if (j[TYPE] == GOOD_ENOUGH)
     {
-        p->start_type = strategy_type::DOMINANT;
+        p->start_type = strategy_type::GE;
     }
     else
     {
         p->start_type = strategy_type::WINNING;
-        cout << "Winning" << endl;
+        cout << "winning" << endl;
     }
 
     if (j[SEMANTICS] == MEALY)
@@ -70,7 +70,7 @@ parse_spec(const char *file_name)
     else
     {
         p->start_semantics = strategy_semantics::MOORE;
-        cout << "Moore" << endl;
+        cout << "moore" << endl;
     }
 
     return p;
@@ -83,7 +83,7 @@ operator<<(std::ostream &os, const spec &obj)
     os << "[" << endl;
     os << setw(4) << "\"" << DESCR << "\": \"" << obj.descr << "\"," << endl;
     os << setw(4) << "\"" << SEMANTICS << "\": \"" << (obj.start_semantics == strategy_semantics::MEALY ? "mealy" : "moore") << "\"," << endl;
-    os << setw(4) << "\"" << TYPE << "\": \"" << (obj.start_type ==strategy_type::WINNING ? "winning" : "dominant") << "\"," << endl;
+    os << setw(4) << "\"" << TYPE << "\": \"" << (obj.start_type ==strategy_type::WINNING ? "winning" : "good-enough") << "\"," << endl;
     os << setw(4) << "\"" << INPUTS << "\": [";
     bool first = true;
     for (string in : obj.input_aps)

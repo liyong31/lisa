@@ -39,12 +39,12 @@ const char* UNOBSERS = "unobservable";
 // 
 //const char* WINNING = "winning";
 //
-const char* DOMINANT = "dominant";
+const char* GOOD_ENOUGH = "good-enough";
 
 const char* MEALY = "mealy";
 
 
-enum class strategy_type { WINNING, DOMINANT };
+enum class strategy_type { WINNING, GE };
 enum class strategy_semantics { MOORE, MEALY };
 
 struct spec
