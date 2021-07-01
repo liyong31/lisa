@@ -1,0 +1,28 @@
+{
+    "inputs": [
+        "i1", 
+        "i2", 
+        "i3", 
+        "i4", 
+        "i5", 
+        "i6"
+    ], 
+    "assumptions": [], 
+    "guarantees": [
+        "(F i1) && (F o1)", 
+        "(F i2) && (F o2)", 
+        "(F i3) && (F o3)", 
+        "(F i4) && (F o4)", 
+        "(F i5) && (F o5)", 
+        "(F i6) && (F o6)"
+    ], 
+    "semantics": "moore", 
+    "outputs": [
+        "o1", 
+        "o2", 
+        "o3", 
+        "o4", 
+        "o5", 
+        "o6"
+    ]
+}

@@ -21,27 +21,27 @@ using namespace std;
 using namespace spot;
 
 // description for the specification
-const char* DESCR = "description";
+extern const char* DESCR;
 // assumption for the specification
-const char* ASSUMPTIONS = "assumptions";
+extern const char* ASSUMPTIONS;
 // guarantees for the specification
-const char* GUARANTEES = "guarantees";
+extern const char* GUARANTEES;
 // inputs for the specification
-const char* INPUTS = "inputs";
+extern const char* INPUTS;
 // outputs for the specification
-const char* OUTPUTS = "outputs";
+extern const char* OUTPUTS;
 // types for the synthesized strategies
-const char* TYPE = "type";
+extern const char* TYPE ;
 // semantics for the synthesized strategies
-const char* SEMANTICS = "semantics";
+extern const char* SEMANTICS;
 // unobservable inputs 
-const char* UNOBSERS = "unobservable";
+extern const char* UNOBSERVS;
 // 
 //const char* WINNING = "winning";
 //
-const char* GOOD_ENOUGH = "good-enough";
+extern const char* GOOD_ENOUGH;
 
-const char* MEALY = "mealy";
+extern const char* MEALY;
 
 
 enum class strategy_type { WINNING, GE };
@@ -63,6 +63,7 @@ struct spec
 
 
     friend std::ostream& operator<<(std::ostream& os, const spec& obj);
+    friend std::istream& operator>>(std::istream& is, spec& obj);
 
 };
 

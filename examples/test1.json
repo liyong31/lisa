@@ -1,0 +1,12 @@
+{
+        "description": "type=winning|dominant, semantics=mealy|moore",
+	"semantics": "moore",
+        "type": "winning",
+	"inputs":  ["i"],
+        "unobservables": ["u"],
+	"outputs": ["o"],
+	"assumptions": [],
+	"guarantees": [
+		"F i & F o & F u"
+	]
+}

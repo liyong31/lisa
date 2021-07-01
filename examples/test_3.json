@@ -1,0 +1,19 @@
+{
+    "inputs": [
+        "i1", 
+        "i2", 
+        "i3"
+    ], 
+    "assumptions": [], 
+    "guarantees": [
+        "(F i1) && (F o1)", 
+        "(F i2) && (F o2)", 
+        "(F i3) && (F o3)"
+    ], 
+    "semantics": "moore", 
+    "outputs": [
+        "o1", 
+        "o2", 
+        "o3"
+    ]
+}
