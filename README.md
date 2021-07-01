@@ -118,9 +118,9 @@ Input format
 =======
 
 Lisa accepts a specification file in JSON format as input.
-Our json input format is inspired from the input of [BoSy](https://github.com/reactive-systems/syfco).  
+Our json input format is inspired from the input of [BoSy](https://github.com/reactive-systems/bosy).  
 
-We take the following arbiter specification for two clients from BoSy.
+We take the following arbiter specification for two clients from BoSy for example.
 Here every request from a client (signal `r_0`/`r_1`) must be eventually granted (signal `g_0`/`g_1`) by the arbiter with the restriction that `g_0` and `g_1` may not be set simultaneously.
 
 ```json
@@ -139,7 +139,13 @@ Here every request from a client (signal `r_0`/`r_1`) must be eventually granted
 	]
 }
 ```
-We note that here the *semantics* of the output strategy can also be a *moore* machine and the strategy *type* can be *good-enough* rather than a winning strategy.
+The meaning of each item in the JSON file is as follows:
+
+* *description* gives optional information about the specification
+* *semantics* indicates whether the output strategy is a *mealy* machine or a *moore* machine
+* *type* specifies whether a *winning* strategy or a *good-enough* strategy is desired
+* *input*, *output* and *assumptions* as usual specify the input, output and unobservable variables, respectively
+* *assumptions* and *guarantees* give the specification formulas as usual 
 
 Command line usage
 =======
