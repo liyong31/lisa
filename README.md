@@ -147,6 +147,7 @@ The meaning of each item in the JSON file is as follows:
 * *input*, *output* and *assumptions* as usual specify the input, output and unobservable variables, respectively
 * *assumptions* and *guarantees* give the specification formulas as usual 
 
+**NOTE** Commas in [] must be followed by a string. 
 Command line usage
 =======
 
@@ -199,17 +200,17 @@ For LTLf to DFA construction
 ==
 1. To use the default setting to construct a DFA from an LTLf formula, type
     
-        ./lisa -ltlf ./examples/ltlf3377.ltlf
+        ./lisa -F ./examples/ltlf3377.json
     
     You are expected to see the output ending with "Number of states (or nodes) is: 78626".
     In the DFA generation, the symbolic representation of DFA has been triggered.
     As we usually do not count the number of states in a symbolic DFA, we only output the number of nodes in the BDD representation of the transition relation of the output DFA.
     
-    Note that the two parameters t1 and t2 mentioned in the submission correspond to respectively the options -nia <int> and -npa <int>.
+    Note that the two parameters t1 and t2 mentioned in the submission correspond to respectively the options -i <int> and -p <int>.
     Recall that the switch from explicit-state form to symbolic-state form is triggered if either the smallest minimal DFA has more than t1 states, or if the product of the number of states in the two smallest minimal DFAs is more than t2.
     For example, the following command
     
-        ./lisa -ltlf ./examples/ltlf3377.ltlf -nia 0 -npa 0
+        ./lisa -F ./examples/ltlf3377.ltlf -i 0 -p 0
     
     corresponds to pure compositional symbolic DFA generation. You are expected to see the output ending with "Number of states (or nodes) is: 40745".
 
@@ -225,7 +226,7 @@ For LTLf to DFA construction
 
 2. In order to use only explicit state representation in DFA generation, type
     
-        ./lisa -ltlf ./examples/ltlf3377.ltlf -exp
+        ./lisa -F ./examples/ltlf3377.json -e
     
     The DFA generation with explicit states always terminates and returns a minimal DFA corresponding to the input formula.
     You are expected to see the output ending with "Number of states (or nodes) is: 3377".
@@ -239,14 +240,9 @@ For LTLf synthesis
 
 1. To perform the synthesis step after DFA generation, type
     
-        ./lisa -ltlf ./examples/ltlf3377.ltlf -part ./examples/ltlf3377.part -syn
+        ./lisa -F ./examples/ltlf3377.json -s
     
-    where the input and output variables in the LTLf formula are specified in the file ltlf3377.part.
     You are expected to see that Lisa outputs "UNREALIZABLE", as this specification is unrealizable.
-
-2. To let the environment move first in the DFA game for LTLf synthesis, type
-
-        ./lisa -ltlf ./examples/ltlf3377.ltlf -part ./examples/ltlf3377.part -syn -env
 
 Syntax
 ==
