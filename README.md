@@ -142,7 +142,7 @@ The meaning of each item in the JSON file is as follows:
 * *description* gives optional information about the specification
 * *semantics* indicates whether the output strategy is a *mealy* machine or a *moore* machine
 * *type* specifies whether a *winning* strategy or a *good-enough* strategy is desired
-* *input*, *output* and *assumptions* as usual specify the input, output and unobservable variables, respectively
+* *input*, *output* and *unobservable* as usual specify the input, output and unobservable variables, respectively
 * *assumptions* and *guarantees* give the specification formulas as usual 
 
 **NOTE** 
