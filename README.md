@@ -104,8 +104,6 @@ In the following we assume that we will compile Lisa on a Ubuntu system.
 
 6. Compile Lisa
 
-    * Copy the executable file ltlf2fol to lisa folder.
-
     * Compile Lisa with Make:
     
             make T1
