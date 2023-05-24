@@ -3,6 +3,7 @@
 /*-------------------------------------------------------------------*/
 
 #include "dfwa.hh"
+#include "debug.hh"
 
 /*-------------------------------------------------------------------*/
 // initialize dd representation of a product DFA
@@ -10,7 +11,7 @@
 dfwa::dfwa(bdd_dict_ptr dict, bdd label_cube)
 :_state_vars(dict), _label_cube(label_cube)
 {
-    _aut = nullptr;
+    // _aut = nullptr;
 }
 
 struct GreaterThanByBddSize
@@ -57,7 +58,7 @@ binary_disjunct_rec(vector<bdd> & trans, vector<bdd> & curr_st_bdd, unsigned lef
 dfwa::dfwa(twa_graph_ptr aut, bdd label_cube, set<unsigned>& finals, const char* name)
 :_state_vars(aut->get_dict(), aut, 2, name, 0, aut->num_states() - 1), _label_cube(label_cube)
 {
-    _aut = aut;
+    // _aut = aut;
     // label cube
     //cout << "construct state bdd #S = " << aut->num_states() << endl;
     vector<bdd> curr_st_bdd;
@@ -90,7 +91,7 @@ dfwa::dfwa(twa_graph_ptr aut, bdd label_cube, set<unsigned>& finals, const char*
     _finals = bddfalse;
     // later if not needed, remove _reach
     _reach = bddfalse;
-    cout << "Computing the transition relation..." << endl;
+    DEBUG_STDOUT( "Computing the transition relation..." << endl);
     // needs to be improved by huffman ?
     //priority_queue<bdd, std::vector<bdd>, GreaterThanByBddSize> pq;
     //vector<bdd> map2tr;
@@ -110,42 +111,11 @@ dfwa::dfwa(twa_graph_ptr aut, bdd label_cube, set<unsigned>& finals, const char*
             //outs = outs | tr.cond;
         }
         sdd = sdd & tdd;
-        /*
-        cout << "tr state i = " << s << endl;
-        bdd_print_sat(cout, aut->get_dict(), sdd);
-        cout << endl;
-        cout << endl;
-        */
-		//if(outs != bddtrue)
-		//{
-			// add a sink state
-			//sdd = sdd | (curr_st_bdd[s] & (! outs) & next_st_bdd[aut->num_states()]);
-		//}
         _trans = _trans | sdd;
 
-        //map2tr.push_back(sdd);
-        //cout << "encoding state = " << s << endl;
     }
     // add a sink state
-    // _trans = _trans | (curr_st_bdd[aut->num_states()] & next_st_bdd[aut->num_states()]);
-    //cout << "Binary construction for transition relation" << endl;
-    // binary divide and conquer disjunction of bdds
-    //_trans = binary_disjunct_rec(map2tr, curr_st_bdd, 0, map2tr.size() - 1);
-    // compute transitions
-    /*
-    while(pq.size() > 1)
-    {
-        bdd f1 = pq.top();
-        pq.pop();
-        bdd f2 = pq.top();
-        pq.pop();
-        bdd f = f1 | f2;
-        pq.push(f);
-    }
-    _trans = pq.top();
-    pq.pop();
-    */
-    cout << "Finished computing the transition relation..." << endl;
+    DEBUG_STDOUT( "Finished computing the transition relation..." << endl);
     _curr_cube = _state_vars.get_cube(0);
     _next_cube = _state_vars.get_cube(1);
     // make pairs
@@ -218,7 +188,7 @@ dfwa::explore()
     unsigned count = 1;
     while(sp != s)
     {
-    	cout << "Iteration number = " << count << endl;
+    	DEBUG_STDOUT( "Iteration number = " << count << endl);
         // record the states reached within last step
         sp = s;
         // compute image of next step
@@ -242,7 +212,7 @@ dfwa::back_explore()
     unsigned count = 1;
     while(sp != s)
     {
-    	cout << "Iteration number = " << count << endl;
+    	DEBUG_STDOUT( "Iteration number = " << count << endl);
         // record the states reached within last step
         sp = s;
         // compute image of next step
@@ -252,7 +222,7 @@ dfwa::back_explore()
         cout << endl;
 #endif
         s = sp | pre_image(sp);
-        cout << "The number of node in reverse R(" << count << ") is " << bdd_nodecount(s) << endl;
+        DEBUG_STDOUT( "The number of node in reverse R(" << count << ") is " << bdd_nodecount(s) << endl);
         ++ count;
     }
     return s;
@@ -378,18 +348,18 @@ intersect_dfwa(dfwa_ptr result, dfwa_ptr op1, dfwa_ptr op2)
     // set the copies of state variables
     result._state_vars._copies = 2;
     // now we add variables from op1 and op2
-    cout << "Computing the intersection product..." << endl;
+    DEBUG_STDOUT( "Computing the intersection product..." << endl);
     // check whether this part can be improved
     result._state_vars.add_bdd_vars(op1._state_vars);
     result._state_vars.add_bdd_vars(op2._state_vars);
-    cout << "#AP1 = " << op1._state_vars._dd_vars[0].size() << " #AP2 = " <<  op2._state_vars._dd_vars[0].size() << endl;
-    cout << "#PRO = " << result._state_vars._dd_vars[0].size() << endl;
+    DEBUG_STDOUT( "#AP1 = " << op1._state_vars._dd_vars[0].size() << " #AP2 = " <<  op2._state_vars._dd_vars[0].size() << endl);
+    DEBUG_STDOUT( "#PRO = " << result._state_vars._dd_vars[0].size() << endl);
     // 
     result._init = op1.get_init() & op2.get_init();
     // especially for the transition relation
-    cout << "Computing transition relation in the intersection product..." << endl;
+    DEBUG_STDOUT( "Computing transition relation in the intersection product..." << endl);
     result._trans = op1.get_trans() & op2.get_trans();
-    cout << "Finished computing transition relation in the intersection product..." << endl;
+    DEBUG_STDOUT( "Finished computing transition relation in the intersection product..." << endl);
     result._finals = op1.get_finals() & op2.get_finals();
     //result._reach = bddfalse;
     result._curr_cube = result._state_vars.get_cube(0);
@@ -398,19 +368,38 @@ intersect_dfwa(dfwa_ptr result, dfwa_ptr op1, dfwa_ptr op2)
     result._curr_to_next_pairs = result._state_vars.make_pair(0, 1);
     result._next_to_curr_pairs = result._state_vars.make_pair(1, 0);
     // compute reachable state space
-    cout << "Computing reachable state space in the product..." << endl;
+    DEBUG_STDOUT( "Computing reachable state space in the product..." << endl);
     result._reach = bddtrue;//result.explore();
-    cout << "Finished computing reachable state space in the product..." << endl;
-    //cout << "reachable states in product: " << endl;
-    //bdd_print_set(cout, result._state_vars.get_dict(), result._reach);
-    //cout << endl;
-    // needs to whether this is useful
-    /*
-    bdd all = bdd_replace(result._reach, result._curr_to_next_pairs);
-    all = all & result._reach;
-    result._trans = result._trans & all;
-    */
-    cout << "Finished computing the intersection product..." << endl;
+    DEBUG_STDOUT( "Finished computing reachable state space in the product..." << endl);
+    DEBUG_STDOUT("Finished computing the intersection product..." << endl);
+}
+
+void dfwa::copy(dfwa& d)
+{
+    // set the copies of state variables
+    this->_state_vars._copies = 2;
+    // now we add variables from op1 and op2
+    // this->_state_vars.clear();
+    this->_state_vars.add_bdd_vars(d._state_vars);
+    this->_label_cube = bddtrue & d._label_cube;
+    // 
+    this->_init = bddtrue & d.get_init();
+    DEBUG_STDOUT( "copy init: " << (_init) << endl);
+    // especially for the transition relation
+    this->_trans = bddtrue & d.get_trans();
+    DEBUG_STDOUT("copy trans: " << (_trans) << endl);
+    DEBUG_STDOUT( "Finished computing transition relation in the intersection product..." << endl);
+    this->_finals = bddtrue & d.get_finals();
+    DEBUG_STDOUT( "copy finals: " << (_finals) << endl);
+    //result._reach = bddfalse;
+    this->_curr_cube = this->_state_vars.get_cube(0);
+    this->_next_cube = this->_state_vars.get_cube(1);
+    // make pairs
+    this->_curr_to_next_pairs = this->_state_vars.make_pair(0, 1);
+    this->_next_to_curr_pairs = this->_state_vars.make_pair(1, 0);
+    // compute reachable state space
+    this->_reach = bddtrue;//result.explore();
+    DEBUG_STDOUT( "Finished deep copy..." << endl);
 }
 
 /*-------------------------------------------------------------------*/
@@ -482,46 +471,26 @@ product_dfwa(dfwa_ptr op1, dfwa_ptr op2, function<bdd(bdd&, bdd&)> func)
     // set the copies of state variables
     result->_state_vars._copies = 2;
     // now we add variables from op1 and op2
-    cout << "Computing the product of two DFAs..." << endl;
+    DEBUG_STDOUT( "Computing the product of two DFAs..." << endl);
     // check whether this part can be improved
     result->_state_vars.add_bdd_vars(op1._state_vars);
     result->_state_vars.add_bdd_vars(op2._state_vars);
-    //cout << "state vars in op1: " << endl;
-    //bdd_print_set(cout, op1.get_dict(), op1._curr_cube);
-    //cout << endl;
-    //cout << "state vars in op2: " << endl;
-    //bdd_print_set(cout, op1.get_dict(), op2._curr_cube);
-    //cout << endl;
-    cout << "Number of current state variables in the two DFAs are respectively: " << op1._state_vars._dd_vars[0].size() << ", " <<  op2._state_vars._dd_vars[0].size() << endl;
-    cout << "Number of current state variables in the product is: " << result->_state_vars._dd_vars[0].size() << endl;
-    //cout << "_init in op1: " << endl;
-    //bdd_print_set(cout, op1.get_dict(), op1.get_init());
-    //cout << endl;
-    //cout << "_init in op2: " << endl;
-    //bdd_print_set(cout, op1.get_dict(), op2.get_init());
-    //cout << endl;
+
+    DEBUG_STDOUT("Number of current state variables in the two DFAs are respectively: " << op1._state_vars._dd_vars[0].size() << ", " <<  op2._state_vars._dd_vars[0].size() << endl);
+    DEBUG_STDOUT("Number of current state variables in the product is: " << result->_state_vars._dd_vars[0].size() << endl);
+
     result->_init = op1.get_init() & op2.get_init();
-    //cout << "initial in product: " << endl;
-    //bdd_print_set(cout, op1.get_dict(), result->_init);
-    //cout << endl;
-    // especially for the transition relation
-    //cout << "#trans1 = " << bdd_nodecount(op1.get_trans()) << " #trans2 = " << bdd_nodecount(op2.get_trans()) << endl;
-    cout << "Computing transition relation in the intersection product..." << endl;
+    DEBUG_STDOUT( "Computing transition relation in the intersection product..." << endl);
     result->_trans = op1.get_trans() & op2.get_trans();
     //cout << "trans in product: " << endl;
     //bdd_print_set(cout, op1.get_dict(), result->_trans);
     //cout << endl;
-    cout << "Finished computing transition relation in the intersection product..." << endl;
-    cout << "Number of nodes in the transition BDD of the product is: " << bdd_nodecount(result->_trans)  << endl;
+    DEBUG_STDOUT("Finished computing transition relation in the intersection product..." << endl);
+    DEBUG_STDOUT("Number of nodes in the transition BDD of the product is: " << bdd_nodecount(result->_trans)  << endl);
 
     bdd finals_1 = op1.get_finals();
     bdd finals_2 = op2.get_finals();
-    //cout << "_finals in op1: " << endl;
-    //bdd_print_set(cout, op1.get_dict(), finals_1);
-    //cout << endl;
-    //cout << "_finals in op2: " << endl;
-    //bdd_print_set(cout, op1.get_dict(), finals_2);
-    //cout << endl;
+
     result->_finals = func(finals_1, finals_2);
     //cout << "finals in product: " << endl;
     //bdd_print_set(cout, op1.get_dict(), result->_finals);
@@ -540,23 +509,8 @@ product_dfwa(dfwa_ptr op1, dfwa_ptr op2, function<bdd(bdd&, bdd&)> func)
     result->_curr_to_next_pairs = result->_state_vars.make_pair(0, 1);
     result->_next_to_curr_pairs = result->_state_vars.make_pair(1, 0);
     // compute reachable state space
-    //cout << "Computing reachable state space in the product..." << endl;
-    //result->_reach = result->explore();//bddtrue;//
-    //cout << "reachable : " << result->_reach << endl;
-    //cout << "Finished computing reachable state space in the product..." << endl;
-    //cout << "reachable finals: " << (result->_reach & result->_finals) << endl;
-    //cout << "reachable states in product: " << endl;
-    //bdd_print_set(cout, result._state_vars.get_dict(), result._reach);
-    //cout << endl;
-    // needs to whether this is useful
-    // only for test
 
-    //bdd all = bdd_replace(result->_reach, result->_curr_to_next_pairs);
-    //all = all & result->_reach;
-    //cout << "reachable states two copies: " << all << endl;
-    //result->_trans = result->_trans & all;
-
-    cout << "Finished computing the product..." << endl;
+    DEBUG_STDOUT( "Finished computing the product..." << endl);
     return *result;
 }
 

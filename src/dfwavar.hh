@@ -39,7 +39,7 @@ class dfwa_var
 
     public:
         dfwa_var(bdd_dict_ptr dict, twa_graph_ptr aut, unsigned copies, string name, int lower, int upper)
-        : _dict(dict), _aut(aut), _copies(copies), _name(name), _lower(lower), _upper(upper)
+        : _dict(dict), _copies(copies), _name(name), _lower(lower), _upper(upper)
         {
         	assert(lower <= upper);
             prepare_vars();
@@ -53,7 +53,7 @@ class dfwa_var
         string _name;
         int _lower;
         int _upper;
-        twa_graph_ptr _aut;
+        // twa_graph_ptr _aut = nullptr;
         
 
         // for product

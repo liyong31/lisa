@@ -64,7 +64,7 @@ string translate2fol(formula &f, int t, int &c)
   string curs, ts;
   string exs, alls;
   string res;
-  int cur;
+  // int cur;
   int count;
   formula r, lft, rgt;
   switch (f.kind())
@@ -284,7 +284,7 @@ string translate2pfol(formula &f, string t, int &c)
   string curs, ts;
   string exs, alls;
   string res;
-  int cur;
+  // int cur;
   int count;
   int intt;
   formula r, lft, rgt;
@@ -513,7 +513,7 @@ get_prefix2fol(formula &f, int t, int &c)
   string curs, ts;
   string exs, alls;
   string res;
-  int cur;
+  // int cur;
   int count;
   formula r, lft, rgt;
   switch (f.kind())

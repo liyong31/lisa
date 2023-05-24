@@ -24,7 +24,7 @@
 class dfwa
 {
     public:
-        twa_graph_ptr _aut;
+        // twa_graph_ptr _aut;
         dfwa_var _state_vars;
         bdd _curr_cube;
         bdd _next_cube;
@@ -60,6 +60,9 @@ class dfwa
         {
         	return _state_vars.get_dict();
         }
+
+        void copy(dfwa& d);
+
 
         //dfwa& operator &(dfwa& other);
         void output(ostream& os);

@@ -30,7 +30,7 @@ get_num_bits(int value)
 dfwa_var::dfwa_var(bdd_dict_ptr dict)
 : _dict(dict)
 {
-    _aut = nullptr;
+    // _aut = nullptr;
     _copies = 0;
     _lower = 0;
     _upper = 0;
