@@ -2,7 +2,7 @@
 #include <sstream>
 #include <string>
 
-#include <spdlog/spdlog.h>
+//#include <spdlog/spdlog.h>
 #include <args.hxx>
 
 #include "utils.hpp"
@@ -15,7 +15,7 @@ using namespace sdf;
 
 int main(int argc, const char *argv[])
 {
-    args::ArgumentParser parser("Lisa synthesizer from LTLf (TLSF format)");
+    args::ArgumentParser parser("Lisa-Syntcomp synthesizer from LTLf (TLSF format)");
     parser.helpParams.width = 110;
     parser.helpParams.helpindent = 26;
 
@@ -58,17 +58,17 @@ int main(int argc, const char *argv[])
              "explicit mode for DFA construction",
              {'e', "exp"});
 
-    args::Flag silence_flag
-            (parser,
-             "s",
-             "silent mode (the printed output adheres to SYNTCOMP)",
-             {'s', "silent"});
+    // args::Flag silence_flag
+    //         (parser,
+    //          "s",
+    //          "silent mode (the printed output adheres to SYNTCOMP)",
+    //          {'s', "silent"});
 
-    args::Flag verbose_flag
-            (parser,
-             "v",
-             "verbose mode (default: informational)",
-             {'v', "verbose"});
+    // args::Flag verbose_flag
+    //         (parser,
+    //          "v",
+    //          "verbose mode (default: informational)",
+    //          {'v', "verbose"});
 
     args::HelpFlag help
         (parser,
@@ -99,10 +99,10 @@ int main(int argc, const char *argv[])
     }
 
     // setup logging
-    if (silence_flag)
-        spdlog::set_level(spdlog::level::off);
-    if (verbose_flag)
-        spdlog::set_level(spdlog::level::debug);
+    // if (silence_flag)
+    //     spdlog::set_level(spdlog::level::off);
+    // if (verbose_flag)
+    //     spdlog::set_level(spdlog::level::debug);
     
     // ostringstream os;
     auto tlsf_file = args::get(tlsf_arg);

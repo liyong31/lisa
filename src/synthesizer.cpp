@@ -21,7 +21,7 @@
 //     #include <aiger.h>
 // }
 
-#include <spdlog/spdlog.h>
+//#include <spdlog/spdlog.h>
 
 using namespace std;
 using namespace lisa;
@@ -38,11 +38,11 @@ int lisa::run(const std::string &tlsf_file_name, uint n_ind,
   // doesn't mention them?
   //       (should still have it)
 
-  DEBUG_STDOUT("\n  tlsf: " << tlsf_file_name);
-  DEBUG_STDOUT("\n  formula: " << formula);
-  DEBUG_STDOUT("\n  inputs: " << sdf::join(", ", inputs));
-  DEBUG_STDOUT("\n  outputs: " << sdf::join(", ", outputs));
-  DEBUG_STDOUT("\n  is_moore: " << is_moore);
+  std::cout << "\n  tlsf: " << tlsf_file_name;
+  std::cout << "\n  formula: " << formula;
+  std::cout << "\n  inputs: " << sdf::join(", ", inputs);
+  std::cout << "\n  outputs: " << sdf::join(", ", outputs);
+  std::cout << "\n  is_moore: " << is_moore;
 
   // aiger* model;
   bool game_is_real =

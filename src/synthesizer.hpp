@@ -1,7 +1,7 @@
 #pragma once
 
 #include <set>
-#include <spdlog/spdlog.h>
+//#include <spdlog/spdlog.h>
 
 #define BDD spotBDD
     #include <spot/parseaut/public.hh>

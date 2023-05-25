@@ -6,6 +6,7 @@
 
 #include "debug.hh"
 #include "spotutil.hh"
+#include "utils.hpp"
 
 /*-------------------------------------------------------------------*/
 // check whether str contains match
@@ -70,7 +71,7 @@ construct_twa_trans(
         for (vector<tuple<bdd, int>>::iterator it = lsuccs.begin() ; it != lsuccs.end(); ++it)
         {
             tuple<bdd, int> tp = *it;
-            succs.push_back(make_tuple(!prop_dd & get<0>(tp), get<1>(tp)));
+            succs.push_back(make_tuple((!prop_dd) & get<0>(tp), get<1>(tp)));
         }
         // high branch
         vector<tuple<bdd, int>> rsuccs;
@@ -102,13 +103,13 @@ read_from_mona_file(const char * file_name, bdd_dict_ptr dict)
     // node tuples for the transitions
     vector<tuple<int, int, int>> node_data;
     // number of vars
-    int num_vars;
+    // int num_vars = 0;
     // number of states
-    int num_states;
+    unsigned int num_states = 0;
     // init_state
-    int init_state;
+    // int init_state = 0;
     // number of bdd nodes
-    int num_bdd_node;
+    // int num_bdd_node= 0;
     
     if (dfa_file.is_open()) 
     {
@@ -147,8 +148,7 @@ read_from_mona_file(const char * file_name, bdd_dict_ptr dict)
             {
                 string delimiter = ":";
                 string number = line.substr(line.find(delimiter) + 1);
-                num_vars = stoi(number);
-                DEBUG_STDOUT("#AP=" + to_string( num_vars));
+                DEBUG_STDOUT("#AP=" + to_string( stoi(number)));
             }else
             // variables: P149 P170 P172 P53 P93
             if(str_contain(line, "variables") && !str_contain(line, "number"))
@@ -158,7 +158,7 @@ read_from_mona_file(const char * file_name, bdd_dict_ptr dict)
                 line = line.substr(line.find(delimiter) + 1);
                 str_split(line, atom_props, ' ');
                 #ifdef DEBUG
-                for(int i = 0; i < atom_props.size(); i ++)
+                for(unsigned i = 0; i < atom_props.size(); i ++)
                 {
                     cout << "AP: " << atom_props[i] << endl;
                 }
@@ -177,16 +177,14 @@ read_from_mona_file(const char * file_name, bdd_dict_ptr dict)
             {
                 string delimiter = ":";
                 string number = line.substr(line.find(delimiter) + 1);
-                init_state = stoi(number);
-                DEBUG_STDOUT("I = " + to_string( init_state));
+                DEBUG_STDOUT("I = " + to_string( stoi(number)));
             }else
             // bdd nodes: 76
             if(str_contain(line, "bdd nodes"))
             {
                 string delimiter = ":";
                 string number = line.substr(line.find(delimiter) + 1);
-                num_bdd_node = stoi(number);
-                DEBUG_STDOUT("#bdd = " + to_string( num_bdd_node));
+                DEBUG_STDOUT("#bdd = " + to_string( stoi(number)));
             }else 
             // final: -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
             if(str_contain(line, "final"))
@@ -199,7 +197,7 @@ read_from_mona_file(const char * file_name, bdd_dict_ptr dict)
                     DEBUG_STDERR("error final states");
                 }else
                 {
-                    for(int i = 0;i < temp.size(); i ++)
+                    for(unsigned i = 0;i < temp.size(); i ++)
                     {
                         final_states.push_back(temp[i] == "1");
                         #ifdef DEBUG
@@ -219,7 +217,7 @@ read_from_mona_file(const char * file_name, bdd_dict_ptr dict)
                 line = line.substr(line.find(delimiter) + 1);
                 str_split(line, temp, ' ');
                 DEBUG_STDOUT("behaviour: ");
-                for(int i = 0; i < temp.size(); i ++)
+                for(unsigned i = 0; i < temp.size(); i ++)
                 {
                     DEBUG_STDOUT(" " + temp[i]);
                     behaviour.push_back(stoi(temp[i]));
@@ -240,7 +238,7 @@ read_from_mona_file(const char * file_name, bdd_dict_ptr dict)
     spot::twa_graph_ptr aut = make_twa_graph(dict);
     vector<bdd> bdd_props;
     // get bdd repr for propositions
-    for(int i = 0; i < atom_props.size(); i ++)
+    for(unsigned i = 0; i < atom_props.size(); i ++)
     {
         bdd p = bdd_ithvar(aut->register_ap(atom_props[i]));
         bdd_props.push_back(p);
@@ -260,7 +258,7 @@ read_from_mona_file(const char * file_name, bdd_dict_ptr dict)
     // need a map to store computed results
     unordered_map<int, vector<tuple<bdd, int>>> node2bdd;
     
-    for(int i = 0; i < behaviour.size(); i ++)
+    for(unsigned i = 0; i < behaviour.size(); i ++)
     {
         // construct the transition of a state
         //, int state , bdd label , int node_id , vector<bdd> props
@@ -334,7 +332,7 @@ translate_ltlf_mona(formula f, bdd_dict_ptr dict)
     ofs.close();
     string dfa_file_name = "./mona.dfa";
     string command = "mona -u -xw " + mona_file_name+ " >" + dfa_file_name;
-    int r = system(command.c_str());
+    sdf::execute(command.c_str());
     // if this turns to be a bottleneck, we need pthread to read from pipe
     return read_from_mona_file(dfa_file_name.c_str(), dict);
 }

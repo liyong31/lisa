@@ -4,6 +4,7 @@
 
 #include "dfwavar.hh"
 
+unsigned index_for_vars = 0;
 /*-------------------------------------------------------------------*/
 // get the number of bits needed to represent an integer value
 /*-------------------------------------------------------------------*/
@@ -99,7 +100,10 @@ dfwa_var::prepare_vars()
 			//cout << "dd_name = " << dd_name << " var_num = " << var_index << endl;
 		}
 	}
+    // std::cout << "index for vars: " << index_for_vars << endl;
     ++ index_for_vars;
+    // std::cout << "index for vars: " << index_for_vars << endl;
+
     order_vars();
 }
 /*-------------------------------------------------------------------*/

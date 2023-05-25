@@ -20,7 +20,8 @@
 using namespace std;
 using namespace spot;
 
-static unsigned index_for_vars = 0;
+extern unsigned index_for_vars;
+// static unsigned index_for_vars;
 
 unsigned
 get_num_bits(int value);
@@ -39,7 +40,7 @@ class dfwa_var
 
     public:
         dfwa_var(bdd_dict_ptr dict, twa_graph_ptr aut, unsigned copies, string name, int lower, int upper)
-        : _dict(dict), _copies(copies), _name(name), _lower(lower), _upper(upper)
+        : _copies(copies), _dict(dict), _name(name), _lower(lower), _upper(upper)
         {
         	assert(lower <= upper);
             prepare_vars();
@@ -47,7 +48,7 @@ class dfwa_var
 
         unsigned _copies = 0;
         vector<vector<bdd>> _dd_vars;
-        bdd_dict_ptr _dict;
+        bdd_dict_ptr _dict = nullptr;
         vector<vector<string>> _dd_names;
         //vector<unsigned> _dd_nums;
         string _name;

@@ -42,7 +42,7 @@ class game_solver
 
         bool eval(bdd& dd, bdd& assign);
     public:
-        unsigned _copies;
+        unsigned _copies = 0;
         // (Z, Y) is the sequence of winning states and outputs
         vector<bdd> _tseq;
         // (Z) is the sequence of winning states
@@ -59,7 +59,7 @@ class game_solver
         dfwa_ptr _dfa;
         
         game_solver(dfwa_ptr dfa, bdd& input_cube, bdd& output_cube)
-        : _dfa(dfa), _in_cube(input_cube), _out_cube(output_cube)
+        : _in_cube(input_cube), _out_cube(output_cube), _dfa(dfa) 
         {
             prepare();
         }

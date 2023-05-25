@@ -16,7 +16,7 @@ add_executable(${PROJECT}-opt ${project_SRC} main)
 target_link_libraries(${PROJECT}-opt "${LIBS}")
 set_target_properties(${PROJECT}-opt PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -fPIC -DNDEBUG -O3")
 
-add_executable(${PROJECT}-debug ${project_SRC} main)
-target_link_libraries(${PROJECT}-debug "${LIBS}")
-set_target_properties(${PROJECT}-debug PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -fPIC")
+#add_executable(${PROJECT}-debug ${project_SRC} main)
+#target_link_libraries(${PROJECT}-debug "${LIBS}")
+#set_target_properties(${PROJECT}-debug PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -fPIC")
 

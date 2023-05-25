@@ -59,7 +59,9 @@ bool lisa::translate(dfwa* res, spot::bdd_dict_ptr dict, const spot::formula& in
                         bool exp_mode, uint n_ind, uint n_prod)
 {
     priority_queue<dfwa_pair, std::vector<dfwa_pair>, GreaterThanByDfwaSize> autlist;
+	#ifdef DEBUG 
 	clock_t c_start = clock();
+	#endif
 	// spot::bdd_dict_ptr dict = spot::make_bdd_dict();
 	DEBUG_STDOUT(  "Starting the decomposition phase" << endl);
 	vector<formula> lst;
@@ -215,7 +217,9 @@ bool lisa::translate(dfwa* res, spot::bdd_dict_ptr dict, const spot::formula& in
 			delete B;
 		}
 	}
+	#ifdef DEBUG 
 	clock_t c_end = clock();
+	#endif
 	DEBUG_STDOUT(  "Finished constructing minimal dfa in "
 		 << 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC << "ms ..." << endl);
 	dfwa_pair pair = autlist.top();
