@@ -62,31 +62,25 @@ bool lisa::translate(dfwa* res, spot::bdd_dict_ptr dict, const spot::formula& in
 	#ifdef DEBUG 
 	clock_t c_start = clock();
 	#endif
-	// spot::bdd_dict_ptr dict = spot::make_bdd_dict();
+
 	DEBUG_STDOUT(  "Starting the decomposition phase" << endl);
 	vector<formula> lst;
-	//cout << "parsed: " << pf1.f << endl;
 	get_formulas(lst, input_f);
-	//reorganize_formulas(lst);
 	while (lst.size() > 0)
 	{
 		// translating automata
 		formula f = lst.back();
 		lst.pop_back();
-		// cout << str_psl(f, true) << endl;
 		twa_graph_ptr aut = trans_formula(f, dict, 7);
 		dict->register_all_variables_of(aut, res);
-		// cout << aut->num_states() << endl;
 		dfwa_pair pair(aut, aut->num_states(), true, f);
 		pair._num_propduct = 0;
-		// cout << "st = " << aut->num_states() << endl;
 		autlist.push(pair);
 	}
 
-	//cout << "splited formulas" << endl;
 	// do products
-	//bdd_autoreorder(BDD_REORDER_WIN2ITE);
-	DEBUG_STDOUT(  "Starting the composition phase" << endl);
+	bdd_autoreorder(BDD_REORDER_WIN2ITE);
+	DEBUG_STDOUT("Starting the composition phase" << endl);
 
 	set<twa_graph_ptr> optimized;
 	while (autlist.size() > 1)
@@ -98,8 +92,7 @@ bool lisa::translate(dfwa* res, spot::bdd_dict_ptr dict, const spot::formula& in
 		autlist.pop();
 		DEBUG_STDOUT(  "Number of states or nodes in M1 and M2: " << first._num_states
 			 << ",  " << second._num_states << endl);
-		spot::formula result_formula = formula::And({first._formula, second._formula});
-		//cout << result_formula << endl;
+		spot::formula result_formula = spot::formula::tt();//formula::And({first._formula, second._formula});
 		bool must_symbolic = false;//opt_->num_of_remaining_dfas > 0 && autlist.size() + 2 <= opt_->num_of_remaining_dfas;
 		if (first._is_explicit && second._is_explicit)
 		{
@@ -121,7 +114,6 @@ bool lisa::translate(dfwa* res, spot::bdd_dict_ptr dict, const spot::formula& in
 			{
 				// explict representation used
 				twa_graph_ptr P = spot::product(A, B);
-				//cout << "explicit minimization starts..." << endl;
 				P = spot::minimize_wdba(P);
 				optimized.insert(P);
 				dfwa_pair pair(P, P->num_states(), true, result_formula);
@@ -192,7 +184,7 @@ bool lisa::translate(dfwa* res, spot::bdd_dict_ptr dict, const spot::formula& in
 			DEBUG_STDOUT(  "Number of nodes in symbolic product is: " << get<1>(result) << endl);
 			autlist.push(pair);
 			delete B;
-			// delete A;
+			delete A;
 		}
 		else
 		{
