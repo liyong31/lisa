@@ -50,7 +50,7 @@ sdf::parse_tlsf(const string& tlsf_file_name)
     int rc;
     string out, err;
 
-    tie(rc, out, err) = execute("./syfco --format ltlxba-fin " + tlsf_file_name);
+    tie(rc, out, err) = execute("syfco " + tlsf_file_name + " --format ltlxba-fin");
     MASSERT(rc == 0 && err.empty(),
             "syfco exited with non-zero status or non-empty stderr: \n" + to_str(rc, out, err) + "\nfile:" + tlsf_file_name);
 
@@ -63,11 +63,11 @@ sdf::parse_tlsf(const string& tlsf_file_name)
     }
     // cout << "formula: " << parsed_formula.f << endl;
 
-    tie(rc, out, err) = execute("./syfco -ins " + tlsf_file_name);
+    tie(rc, out, err) = execute("syfco -ins " + tlsf_file_name);
     MASSERT(rc == 0 && err.empty(), "syfco exited with non-zero status or non-empty stderr: " << to_str(rc, out, err));
     auto str_inputs = split_by_space(substituteAll(out, ",", " "));
 
-    tie(rc, out, err) = execute("./syfco -outs " + tlsf_file_name);
+    tie(rc, out, err) = execute("syfco -outs " + tlsf_file_name);
     MASSERT(rc == 0 && err.empty(),
             "syfco exited with non-zero status or non-empty stderr: " + to_str(rc, out, err));
     auto str_outputs = split_by_space(substituteAll(out, ",", " "));
@@ -96,7 +96,7 @@ sdf::parse_tlsf(const string& tlsf_file_name)
             MASSERT(contains(inputs, ap) || contains(outputs, ap), "the formula mentions AP not from inputs nor outputs: " << ap);
     }
 
-    tie(rc, out, err) = execute("./syfco -g " + tlsf_file_name);
+    tie(rc, out, err) = execute("syfco -g " + tlsf_file_name);
     MASSERT(rc == 0 && err.empty(),
             "syfco exited with non-zero status or non-empty stderr: " + to_str(rc, out, err));
     auto out_stripped = lower(trim_spaces(out));
