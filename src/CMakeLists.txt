@@ -12,7 +12,7 @@ endforeach(fil)
 # set the default build type to 'debug'.
 SET(CMAKE_BUILD_TYPE Debug CACHE STRING "default to debug" FORCE)
 
-add_executable(${PROJECT}-opt ${project_SRC} main)
+add_executable(${PROJECT}-opt ${project_SRC} main.cpp)
 target_link_libraries(${PROJECT}-opt "${LIBS}")
 set_target_properties(${PROJECT}-opt PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -fPIC -DNDEBUG -O3")
 
