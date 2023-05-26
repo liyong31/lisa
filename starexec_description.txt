@@ -37,3 +37,15 @@ Make sure that the executable syfco is also placed in binary/.
 
 Now you can run lisa-syntcomp with run_lisa.sh.
 Note that mona and syfco are invoked via command line, so we need to make sure binary/ is part of PATH.
+	
+	
+
+
+
+
+
+
+
+
+
+
