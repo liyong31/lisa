@@ -15,6 +15,7 @@ export PATH=$PATH:$SCRIPT_DIR/bin
 export LISA_TP=$SCRIPT_DIR/third_parties/
 
 echo -e "${GREEN}building spot..${NC}"
+tar -xf $LISA_TP/spot-2.10.5.tar.gz
 cd $LISA_TP/spot-2.10.5/
 ./configure --prefix=$LISA_TP/spot-install-prefix/
 make -j8
@@ -22,6 +23,7 @@ make install
 
 echo -e "${GREEN}building MONA..${NC}"
 cd $LISA_TP/MONA/
+autoreconf -i
 ./configure --prefix=$LISA_TP/mona-install-prefix/
 make
 make install-strip
