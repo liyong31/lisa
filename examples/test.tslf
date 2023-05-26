@@ -1,0 +1,34 @@
+INFO {
+  TITLE:       "test"
+  DESCRIPTION: "test example"
+  SEMANTICS:   Finite,Mealy
+  TARGET:      Mealy
+}
+
+MAIN {
+
+  INPUTS {
+        i1; 
+        i2; 
+        i3; 
+        i4; 
+        i5
+  }
+
+  OUTPUTS {
+        o1; 
+        o2; 
+        o3; 
+        o4; 
+        o5
+  }
+
+  GUARANTEES {
+        (F i1) && (F o1); 
+        (F i2) && (F o2); 
+        (F i3) && (F o3); 
+        (F i4) && (F o4); 
+        (F i5) && (F o5)
+  }
+
+}

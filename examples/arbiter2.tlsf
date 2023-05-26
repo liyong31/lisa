@@ -1,0 +1,25 @@
+INFO {
+  TITLE:       "arbiter"
+  DESCRIPTION: "arbiter example"
+  SEMANTICS:   Finite,Moore
+  TARGET:      Moore
+}
+
+MAIN {
+
+  INPUTS {
+    r_0;
+    r_1
+  }
+
+  OUTPUTS {
+    g_0;
+    g_1
+  }
+
+  GUARANTEES {
+    G (r_0 -> (F g_0));
+    G (r_1 -> (F g_1));
+  }
+
+}

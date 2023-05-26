@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "type_traits": "cpp",
+        "map": "cpp",
+        "*.tcc": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "system_error": "cpp"
+    }
+}

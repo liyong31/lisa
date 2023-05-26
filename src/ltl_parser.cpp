@@ -63,11 +63,11 @@ sdf::parse_tlsf(const string& tlsf_file_name)
     }
     // cout << "formula: " << parsed_formula.f << endl;
 
-    tie(rc, out, err) = execute("syfco -ins " + tlsf_file_name);
+    tie(rc, out, err) = execute("syfco --format ltlxba-fin -ins " + tlsf_file_name);
     MASSERT(rc == 0 && err.empty(), "syfco exited with non-zero status or non-empty stderr: " << to_str(rc, out, err));
     auto str_inputs = split_by_space(substituteAll(out, ",", " "));
 
-    tie(rc, out, err) = execute("syfco -outs " + tlsf_file_name);
+    tie(rc, out, err) = execute("syfco --format ltlxba-fin -outs " + tlsf_file_name);
     MASSERT(rc == 0 && err.empty(),
             "syfco exited with non-zero status or non-empty stderr: " + to_str(rc, out, err));
     auto str_outputs = split_by_space(substituteAll(out, ",", " "));

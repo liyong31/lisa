@@ -1,0 +1,22 @@
+INFO {
+  TITLE:       "LTLf-test"
+  DESCRIPTION: "LTLf-test example"
+  SEMANTICS:   Finite,Moore
+  TARGET:      Moore
+}
+
+MAIN {
+
+  INPUTS {
+    Aa;
+  }
+
+  OUTPUTS {
+    Bb;
+  }
+
+  GUARANTEES {
+    X[!] (Aa && Bb);
+  }
+
+}
