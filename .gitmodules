@@ -7,3 +7,6 @@
 [submodule "third_parties/third_parties/syfco"]
 	path = third_parties/third_parties/syfco
 	url = https://github.com/reactive-systems/syfco
+[submodule "third_parties/syfco"]
+	path = third_parties/syfco
+	url = https://github.com/reactive-systems/syfco
