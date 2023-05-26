@@ -1,0 +1,13 @@
+pstreams-1.0.3/pstream.h
+pstreams-1.0.3/ChangeLog
+pstreams-1.0.3/MANIFEST
+pstreams-1.0.3/AUTHORS
+pstreams-1.0.3/LICENSE_1_0.txt
+pstreams-1.0.3/Doxyfile
+pstreams-1.0.3/INSTALL.md
+pstreams-1.0.3/Makefile
+pstreams-1.0.3/README
+pstreams-1.0.3/mainpage.html
+pstreams-1.0.3/test_pstreams.cc
+pstreams-1.0.3/test_minimum.cc
+pstreams-1.0.3/pstreams-devel.spec
