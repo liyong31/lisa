@@ -1,12 +1,3 @@
-[submodule "third_parties/third_parties/MONA"]
-	path = third_parties/third_parties/MONA
-	url = https://github.com/liyong31/MONA.git
-[submodule "third_parties/third_parties/args"]
-	path = third_parties/third_parties/args
-	url = https://github.com/Taywee/args
-[submodule "third_parties/third_parties/syfco"]
-	path = third_parties/third_parties/syfco
-	url = https://github.com/reactive-systems/syfco
 [submodule "third_parties/syfco"]
 	path = third_parties/syfco
 	url = https://github.com/reactive-systems/syfco
