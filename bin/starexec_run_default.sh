@@ -11,6 +11,10 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export PATH=$PATH:$SCRIPT_DIR
 
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SCRIPT_DIR/mona-install-prefix/lib
+#echo "$LD_LIBRARY_PATH"
+
 fileR=$(mktemp)
 fileU=$(mktemp)
 
