@@ -80,8 +80,8 @@ function check_and_exit() {
 #cmdR="sleep 1; echo real-process; echo UNKNOWN"
 #cmdU="sleep 0.1; echo unreal-process; echo UNKNOWN"
 
-cmdR="./lisa-syntcomp-opt $@ "
-cmdU="./lisa-syntcomp-opt $@ -i 800 -p 300000"
+cmdR="./lisa-syntcomp-opt $1 "
+cmdU="./lisa-syntcomp-opt $1 -i 800 -p 300000"
 
 (eval "$cmdR") > $fileR &  # start synthesizer for the original spec
 pR=$!

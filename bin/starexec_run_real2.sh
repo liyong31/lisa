@@ -44,7 +44,7 @@ function check_and_exit() {
 #cmdU="sleep 0.1; echo unreal-process; echo UNKNOWN"
 
 
-cmdU="./lisa-syntcomp-opt $@ -i 800 -p 300000"
+cmdU="./lisa-syntcomp-opt $1 -i 800 -p 300000"
 
 (eval "$cmdU") > $fileU &  # start synthesizer for the dualized spec
 pU=$!

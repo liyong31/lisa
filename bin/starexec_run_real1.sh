@@ -42,7 +42,7 @@ function check_and_exit() {
 #cmdR="sleep 1; echo real-process; echo UNKNOWN"
 #cmdU="sleep 0.1; echo unreal-process; echo UNKNOWN"
 
-cmdR="./lisa-syntcomp-opt $@ "
+cmdR="./lisa-syntcomp-opt $1"
 
 (eval "$cmdR") > $fileR &  # start synthesizer for the original spec
 pR=$!
